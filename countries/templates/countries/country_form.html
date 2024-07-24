@@ -1,0 +1,25 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+{% block content %}
+<div class="container py-4">
+    <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Country</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'country_list' %}" class='btn btn-default'>Cancel</a>
+        <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+    </form>
+</div>
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      flatpickr("input[type='date']", {
+        dateFormat: "Y-m-d"
+      });
+    });
+  </script>

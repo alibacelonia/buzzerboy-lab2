@@ -1,0 +1,40 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+<h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Task</h2>
+<form method="post">
+    {% csrf_token %}
+    {% comment %} {{ form.as_p }} {% endcomment %}
+    {% for field in form %}
+        <div class="form-group">
+            {% if field.label == 'Completed' %}
+                <div class="d-flex align-items-center">
+                    <div class="form-check">
+                        {{ field }}
+                    </div>
+                    <label class="mb-0" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+            {% else %} 
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="">
+                    {{ field }}
+                </div>
+            {% endif %}
+            
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <a href="{% url 'project_detail' project.pk %}" class='btn btn-default'>Cancel</a>
+    <button class='btn btn-primary' type="submit">Save</button>
+</form>
+</div>
+{% endblock %}

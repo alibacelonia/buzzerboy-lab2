@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% load humanize %}
+{% block content %}
+<div class="container py-4">
+    <a href="{% url 'country_list' %}" class="btn btn-default"> Back </a>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header pb-4">
+                    <div class="row">
+                        <div class="col-md-8 d-flex align-items-center">
+                            <h4 class="mb-0 font-weight-bolder">Country Details</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <p><strong>Name:</strong> {{ country.name }}</p>
+                    <p><strong>Code:</strong> {{ country.code }}</p>
+                    <p><strong>Population:</strong> {{ country.population|intcomma }}</p>
+                    <p><strong>Description:</strong> {{ country.description }}</p>
+                    <p><strong>Independence Day:</strong> {{ country.independence_day }}</p>
+                    <p><strong>Currency:</strong> {{ country.currency }}</p>
+                    <p><strong>Continent:</strong> {{ country.get_continent_display }}</p>
+                    <a class="btn btn-primary" href="{% url 'state_list' country.pk %}">Manage States</a>
+                    <a class="btn btn-success" href="{% url 'country_update' country.pk %}">Edit</a>
+                    <button class="btn btn-link text-danger"   data-bs-toggle="modal" data-bs-target="#deleteModal{{ country.pk }}">Delete</button>
+
+                    <div class="modal fade" id="deleteModal{{ country.pk }}" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true" >
+                        <div class="modal-dialog modal-danger modal-dialog-centered" >
+                        <div class="modal-content">
+                            <div class="modal-body">
+                            <div class="py-3 text-center">
+                                <h4 class="text-gradient text-danger mt-4">Are you sure you want to delete this project?</h4>
+                                <p>All data associated with this project will also be permanently deleted.</p>
+                            </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                            <form action="{% url 'country_delete' country.pk %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-default ml-auto" type="submit">Yes</button>
+                            </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="card-header pb-0 d-flex justify-content-between  items-center">
+              
+      <h3 class="font-weight-bolder">Projects</h3>
+      <div class="">
+        <a href="{% url 'project_create' %}" class="btn btn-primary">Add Project</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center justify-content-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% if projects %}
+                    {% for project in projects %}
+                      <tr>
+                        <td>
+                          <p class="text-sm ps-3 font-weight-bold mb-0">{{ project.name }}</p>
+                        </td>
+                        <td>
+                          <p class="text-sm font-weight-bold mb-0">$ {{ project.budget|intcomma }}</p>
+                        </td>
+                        <td class=" text-sm">
+                          <span class="badge badge-sm {% if project.status == 'Not Started' %} bg-gradient-secondary {% elif project.status == 'In Progress' %} bg-gradient-warning {% else %} bg-gradient-success {% endif %}">{{ project.status }}</span>
+                        </td>
+                        <td>
+                          <span class="text-xs font-weight-bold">{{ project.start_date|date:"F j, Y" }}</span>
+                        </td>
+                        <td>
+                          <span class="text-xs font-weight-bold">{{ project.end_date|date:"F j, Y" }}</span>
+                        </td>
+                        <td>
+                          <a href="{% url 'project_detail' project.pk %}" class="text-info font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                            View
+                          </a>
+                          <a href="{% url 'project_update' project.pk %}" class="ps-2 text-success font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                            Edit
+                          </a>
+                          <a href="javascript;;" class="ps-2  text-danger font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#modal-notification">
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+
+                      <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true" >
+                        <div class="modal-dialog modal-danger modal-dialog-centered" >
+                          <div class="modal-content">
+                            <div class="modal-body">
+                              <div class="py-3 text-center">
+                                <h4 class="text-gradient text-danger mt-4">Are you sure you want to delete this project?</h4>
+                                <p>All data associated with this project will also be permanently deleted.</p>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                              <form action="{% url 'project_delete' project.pk %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-default ml-auto" type="submit">Yes</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    {% endfor %}
+                  {%else%}
+                      <tr>
+                          <td colspan="6" class="text-center">
+                            <span class="text-sm">No projects yet.</span>
+                          </td>
+                      </tr>
+                  {%endif%}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+    
+
+{% endblock %}
+

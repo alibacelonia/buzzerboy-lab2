@@ -1,0 +1,66 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="container py-4">
+    <a href="{% url 'project_detail' project.pk %}" class="btn btn-default"> Back </a>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+              <div class="card-header pb-0 p-3">
+                <div class="row">
+                  <div class="col-md-8 d-flex align-items-center">
+                    <h4 class="mb-0 font-weight-bolder">Task Details</h4>
+                  </div>
+                </div>
+              </div>
+
+                <div class="card-body pt-0">
+                
+                    <div class="pt-3 ">
+                        <p class="mb-0 text-sm">{{project.description}}</p>
+                        <div class="d-sm-flex bg-gray-100 border-radius-lg p-2 my-3">
+                            <p class="text-sm font-weight-bold my-auto ps-sm-2">Task Title</p>
+                            <p class="text-sm ms-auto me-3 my-auto">{{ project.name }}</p>
+                        </div>
+                        <div class="d-sm-flex bg-gray-100 border-radius-lg p-2 my-3">
+                            <p class="text-sm font-weight-bold my-auto ps-sm-2">Task Priority</p>
+                            <p class="text-sm ms-auto me-3 my-auto">$ {{ project.budget|intcomma }}</p>
+                        </div>
+                        <div class="d-sm-flex bg-gray-100 border-radius-lg p-2 my-3">
+                            <p class="text-sm font-weight-bold my-auto ps-sm-2">Task Due Date</p>
+                            <span class="text-sm ms-auto me-3 my-auto">{{ project.start_date|date:"F j, Y" }}</span>
+                        </div>
+                        <div class="d-sm-flex bg-gray-100 border-radius-lg p-2 my-3">
+                            <p class="text-sm font-weight-bold my-auto ps-sm-2">Task Status</p>
+                            <span class="ms-auto me-3 my-auto badge badge-sm {% if project.status == 'Not Started' %} bg-gradient-secondary {% elif project.status == 'In Progress' %} bg-gradient-warning {% else %} bg-gradient-success {% endif %}">{{ project.status }}</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'task_update' project.pk task.pk %}" class="btn btn-success mb-0 ms-2" type="button" name="button">Edit</a>
+                    <button class="btn btn-link text-danger mb-0 ms-auto" type="button" name="button"  data-bs-toggle="modal" data-bs-target="#modal-notification">Delete Task</button>
+                </div>
+
+            </div>
+          </div>
+    </div>
+
+</div>
+<div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true" >
+    <div class="modal-dialog modal-danger modal-dialog-centered" >
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="py-3 text-center">
+            <h4 class="text-gradient text-danger mt-4">Are you sure you want to delete this task?</h4>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+          <form action="{% url 'task_delete' project.pk task.pk%}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-default ml-auto" type="submit">Yes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
