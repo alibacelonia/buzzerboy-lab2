@@ -60,6 +60,11 @@ At this point, the app runs at `http://127.0.0.1:8000/`.
 
 <br />
 
+ℹ️ Note: 
+* In order to check LCRUD features, you must [create](http://127.0.0.1:8000/accounts/register/) a user account to manage projects and countries.
+* User and Superuser accounts use same [login](http://127.0.0.1:8000/accounts/login/) page.
+
+
 # Tasks
 
 * [Task 1](submission-lab2/Lab2-task1.md) - Clone any free starter kit from [Creative Tim](https://www.creative-tim.com).
