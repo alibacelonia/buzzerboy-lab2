@@ -22,6 +22,9 @@ def country_create(request):
         if form.is_valid():
             form.save()
             return redirect('country_list')
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'countries/country_form.html', {'form': form, 'segment': 'countries'})
     else:
         form = CountryForm()
     return render(request, 'countries/country_form.html', {'form': form, 'segment': 'countries'})
@@ -34,6 +37,9 @@ def country_update(request, pk):
         if form.is_valid():
             form.save()
             return redirect('country_list')
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'countries/country_form.html', {'form': form, 'segment': 'countries'})
     else:
         form = CountryForm(instance=country)
     return render(request, 'countries/country_form.html', {'form': form, 'segment': 'countries'})
@@ -67,6 +73,9 @@ def state_create(request, country_id):
             state.country = country
             state.save()
             return redirect('state_list', country_id=country.id)
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'countries/state_form.html', {'form': form, 'country': country, 'segment': 'countries'})
     else:
         form = StateForm()
     return render(request, 'countries/state_form.html', {'form': form, 'country': country, 'segment': 'countries'})
@@ -80,6 +89,9 @@ def state_update(request, country_pk, state_pk):
         if form.is_valid():
             form.save()
             return redirect('state_list', country_id=country.id)
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'countries/state_form.html', {'form': form, 'country': country, 'segment': 'countries'})
     else:
         form = StateForm(instance=state)
     return render(request, 'countries/state_form.html', {'form': form, 'country': country, 'segment': 'countries'})

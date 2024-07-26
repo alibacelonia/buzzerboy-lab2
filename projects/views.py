@@ -23,7 +23,7 @@ def project_create(request):
             return redirect('project_list')
         else:
             print("Form errors:", form.errors)  # Debug line
-            return render(request, 'projects/project_form.html', {'form': form})
+            return render(request, 'projects/project_form.html', {'form': form, 'segment': 'project'})
     else:
         form = ProjectForm()
         print("Rendering empty form.")  # Debug line
@@ -37,6 +37,9 @@ def project_update(request, pk):
         if form.is_valid():
             form.save()
             return redirect('project_detail', pk=pk)
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'projects/project_form.html', {'form': form, 'segment': 'project'})
     else:
         form = ProjectForm(instance=project)
     return render(request, 'projects/project_form.html', {'form': form, 'segment': 'project'})
@@ -68,6 +71,9 @@ def task_create(request, project_pk):
             task.project = project
             task.save()
             return redirect('project_detail', pk=project_pk)
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'projects/task_form.html', {'form': form, 'project': project, 'segment': 'project'})
     else:
         form = TaskForm()
     return render(request, 'projects/task_form.html', {'form': form, 'project': project, 'segment': 'project'})
@@ -81,6 +87,9 @@ def task_update(request, project_pk, task_pk):
         if form.is_valid():
             form.save()
             return redirect('project_detail', pk=project_pk)
+        else:
+            print("Form errors:", form.errors)  # Debug line
+            return render(request, 'projects/task_form.html', {'form': form, 'project': project, 'segment': 'project'})
     else:
         form = TaskForm(instance=task)
     return render(request, 'projects/task_form.html', {'form': form, 'project': project, 'segment': 'project'})
