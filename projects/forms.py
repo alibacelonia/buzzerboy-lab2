@@ -142,9 +142,90 @@ class ProjectForm(forms.ModelForm):
         
 
 class TaskForm(forms.ModelForm):
+
     class Meta:
         model = Task
-        fields = ['title', 'description', 'due_date', 'priority', 'completed']
-        widgets = {
-            'due_date': forms.DateInput(attrs={'class': 'form-control datepicker', 'placeholder': 'Select due date', 'type': 'date'}),
+        fields = [
+            'project',
+            'title', 
+            'description', 
+            'due_date', 
+            'priority', 
+            'completed'
+        ]
+
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        required=True,
+        help_text='Select the project for this task.',
+        error_messages={
+            'required': 'The project is required.'
+        },
+        widget=forms.Select(attrs={'placeholder': 'Select Project'})
+    )
+
+    title = forms.CharField(
+        max_length=100,
+        required=True,
+        help_text='Enter the title of the task (max 100 characters).',
+        error_messages={
+            'required': 'The task title is required.',
+            'max_length': 'The task title cannot exceed 100 characters.'
+        },
+        widget=forms.TextInput(attrs={'placeholder': 'Task Title'})
+    )
+
+    description = forms.CharField(
+        max_length=1000,
+        widget=forms.Textarea(attrs={'placeholder': 'Task Description'}),
+        required=True,
+        help_text='Enter the description of the task.',
+        error_messages={
+            'required': 'The description is required.',
+            'max_length': 'The description cannot exceed 1000 characters.'
         }
+    )
+
+    due_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'placeholder': 'Enter due date', 'class': 'form-control datepicker', 'type': 'date'}),
+        help_text='Enter the due date of the task.',
+        error_messages={
+            'required': 'The due date is required.',
+            'invalid': 'Enter a valid date.'
+        }
+    )
+
+    priority = forms.ChoiceField(
+        choices=[
+            ('Low', 'Low'),
+            ('Medium', 'Medium'),
+            ('High', 'High')
+        ],
+        required=True,
+        help_text='Select the priority of the task.',
+        error_messages={
+            'required': 'The priority is required.'
+        },
+        widget=forms.Select(attrs={'placeholder': 'Select Priority'})
+    )
+
+    completed = forms.BooleanField(
+        required=False,
+        initial=False,
+        help_text='Mark as completed.',
+        widget=forms.CheckboxInput()
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        title = cleaned_data.get("title")
+        description = cleaned_data.get("description")
+        due_date = cleaned_data.get("due_date")
+        priority = cleaned_data.get("priority")
+        completed = cleaned_data.get("completed")
+        project = cleaned_data.get("project")
+
+        # Add any additional validation logic here
+
+        return cleaned_data

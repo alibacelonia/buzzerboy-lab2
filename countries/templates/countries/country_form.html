@@ -9,7 +9,44 @@
     <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Country</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% comment %} {{ form.as_p }} {% endcomment %}
+        {% if form.non_field_errors %}
+            <div style="color: red;">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% for field in form %}
+        <div class="form-group">
+            {% if field.label == 'Completed' %}
+                <div class="d-flex align-items-center">
+                    <div class="form-check">
+                        {{ field }}
+                    </div>
+                    <label class="mb-0" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+            {% else %} 
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="">
+                    {{ field }}
+                </div>
+            {% endif %}
+            
+            {% comment %} {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %} {% endcomment %}
+
+            {% if field.errors %}
+                <div class="text-danger">
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
         <a href="{% url 'country_list' %}" class='btn btn-default'>Cancel</a>
         <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
     </form>

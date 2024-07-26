@@ -7,7 +7,15 @@
 <form method="post">
     {% csrf_token %}
     {% comment %} {{ form.as_p }} {% endcomment %}
-    {% for field in form %}
+    {% if form.non_field_errors %}
+            <div style="color: red;">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% for field in form %}
         <div class="form-group">
             {% if field.label == 'Completed' %}
                 <div class="d-flex align-items-center">
@@ -23,16 +31,19 @@
                 </div>
             {% endif %}
             
-            {% if field.help_text %}
+            {% comment %} {% if field.help_text %}
                 <small class="form-text text-muted">{{ field.help_text }}</small>
-            {% endif %}
-            {% for error in field.errors %}
-                <div class="invalid-feedback">
-                    {{ error }}
+            {% endif %} {% endcomment %}
+
+            {% if field.errors %}
+                <div class="text-danger">
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            {% endif %}
         </div>
-    {% endfor %}
+        {% endfor %}
     <a href="{% url 'project_detail' project.pk %}" class='btn btn-default'>Cancel</a>
     <button class='btn btn-primary' type="submit">Save</button>
 </form>
